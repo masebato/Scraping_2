@@ -89,8 +89,8 @@ def iniciar(id,ciudad,entidad_especialidad):
         "browserName": "firefox",
         "version": "94.0",
         "platform": "LINUX",
-        #"enableVNC": True,
-        #"enableVideo": True,
+        "enableVNC": True,
+        "enableVideo": True,
     }
 
     driver = webdriver.Remote(
@@ -98,57 +98,47 @@ def iniciar(id,ciudad,entidad_especialidad):
         desired_capabilities=capabilities
     )
 
+    driver.implicitly_wait(15)
+
+
     driver.get(url)
-    _b_ciudad = True
-    while _b_ciudad:
-        try:
-            if Seleccionar_ciudad(driver, ciudad):
-                print("Ciudad seleccionada")
-                _b_ciudad = False
-        except:
-            _b_ciudad=True
-            #print("Se demoró cargar la ciudad")
+    try:
+        if Seleccionar_ciudad(driver, ciudad):
+            print("Ciudad seleccionada")
+            
+    except:
+        print("Se demoró cargar la ciudad")
+        return Json
 
 
-    _b_entidad = True
-    while _b_entidad:
-        try:
-            if Seleccionar_Entidad_Especialidad(driver,entidad_especialidad):
-                print("Entidad/Especialidad seleccionada")
-                _b_entidad = False
-        except:
-            _b_entidad=True
+    try:
+        if Seleccionar_Entidad_Especialidad(driver,entidad_especialidad):
+            print("Entidad/Especialidad seleccionada")
+    except:
+        return Json
             #print("Se demoró cargar la entidad")
 
-    _b_envio = True
+    try:
+        # Consultar con los parametros
+        if Diligenciar_y_Consultar(id, driver):
+            print("Diligenciamiento y consulta enviada")
+    except:
+        return Json
+         #print("Se demoró enviar la consulta")
 
-    while _b_envio:
-        try:
-            # Consultar con los parametros
-            if Diligenciar_y_Consultar(id, driver):
-                print("Diligenciamiento y consulta enviada")
-                _b_envio=False
-        except:
-            _b_envio = True
-            #print("Se demoró enviar la consulta")
-
-    _b_contenido = True
-
-    while _b_contenido:
-        try:
-            _contenido = driver.find_elements_by_xpath('//tr[@class="tr_contenido"]')
-            _contenido = _contenido[4].text
-            _Scontenido = _contenido.split('\n')
-            if (len(_Scontenido) == 4):
-                aux_s = _Scontenido[3]
-                _Scontenido[3] = ''
-                _Scontenido.append("")
-                _Scontenido.append(aux_s)
-            Json = Generar_Json(_Scontenido)
-            #print("Contenido ",_Scontenido)
-            _b_contenido = False
-        except:
-            _b_contenido = True
+    try:
+        _contenido = driver.find_elements_by_xpath('//tr[@class="tr_contenido"]')
+        _contenido = _contenido[4].text
+        _Scontenido = _contenido.split('\n')
+        if (len(_Scontenido) == 4):
+            aux_s = _Scontenido[3]
+            _Scontenido[3] = ''
+            _Scontenido.append("")
+            _Scontenido.append(aux_s)
+        Json = Generar_Json(_Scontenido)
+        #print("Contenido ",_Scontenido)
+    except:
+        return Json
             #print("Se demoró cargar el contenido")
     try:
         driver.quit()
@@ -163,8 +153,8 @@ def iniciar2(id,fecha,ciudad,entidad_especialidad):
     capabilities = {
         "browserName": "firefox",
         "version": "92.0",
-        #"enableVNC": True,
-        #"enableVideo": False
+        "enableVNC": True,
+        "enableVideo": False
     }
 
     driver = webdriver.Remote(
@@ -180,7 +170,7 @@ def iniciar2(id,fecha,ciudad,entidad_especialidad):
                 _b_ciudad = False
         except:
             _b_ciudad=True
-            #print("Se demoró cargar la ciudad")
+            print("Se demoró cargar la ciudad")
 
 
     _b_entidad = True
@@ -191,7 +181,7 @@ def iniciar2(id,fecha,ciudad,entidad_especialidad):
                 _b_entidad = False
         except:
             _b_entidad=True
-            #print("Se demoró cargar la entidad")
+            print("Se demoró cargar la entidad")
 
     _b_envio = True
 
@@ -203,7 +193,7 @@ def iniciar2(id,fecha,ciudad,entidad_especialidad):
                 _b_envio=False
         except:
             _b_envio = True
-            #print("Se demoró enviar la consulta")
+            print("Se demoró enviar la consulta")
 
     _b_contenido = True
 
@@ -222,7 +212,7 @@ def iniciar2(id,fecha,ciudad,entidad_especialidad):
             _b_contenido = False
         except:
             _b_contenido = True
-            #print("Se demoró cargar el contenido")
+            print("Se demoró cargar el contenido")
     try:
         driver.quit()
     except:
