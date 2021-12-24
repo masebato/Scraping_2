@@ -101,22 +101,22 @@ def iniciar(id,ciudad,entidad_especialidad):
     while _b_ciudad:
         try:
             if Seleccionar_ciudad(driver, ciudad):
-                print("Ciudad seleccionada")
+                #print("Ciudad seleccionada")
                 _b_ciudad = False
         except:
             _b_ciudad=True
-            print("Se demoró cargar la ciudad")
+            #print("Se demoró cargar la ciudad")
 
 
     _b_entidad = True
     while _b_entidad:
         try:
             if Seleccionar_Entidad_Especialidad(driver,entidad_especialidad):
-                print("Entidad/Especialidad seleccionada")
+                #print("Entidad/Especialidad seleccionada")
                 _b_entidad = False
         except:
             _b_entidad=True
-            print("Se demoró cargar la entidad")
+            #print("Se demoró cargar la entidad")
 
     _b_envio = True
 
@@ -124,11 +124,11 @@ def iniciar(id,ciudad,entidad_especialidad):
         try:
             # Consultar con los parametros
             if Diligenciar_y_Consultar(id, driver):
-                print("Diligenciamiento y consulta enviada")
+                #print("Diligenciamiento y consulta enviada")
                 _b_envio=False
         except:
             _b_envio = True
-            print("Se demoró enviar la consulta")
+            #print("Se demoró enviar la consulta")
 
     _b_contenido = True
 
@@ -147,7 +147,7 @@ def iniciar(id,ciudad,entidad_especialidad):
             _b_contenido = False
         except:
             _b_contenido = True
-            print("Se demoró cargar el contenido")
+            #print("Se demoró cargar el contenido")
     try:
         driver.quit()
     except:
