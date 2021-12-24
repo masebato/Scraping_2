@@ -11,30 +11,28 @@ def ping():
 def d():
     return jsonify({"message": "pong!"})
 
-@app.route('/prueba')
-def prueba1():
-    p1 = request.args.get('id','No contiene este parametro')
-    p2 = request.args.get('fecha', 'No contiene este parametro')
-    p3 = request.args.get('ciudad', 'No contiene este parametro')
-    p4 = request.args.get('entidad', 'No contiene este parametro')
-    print(p1,p2,p3,p4)
-    return iniciar2(p1,p2,p3,p4)
+# @app.route('/prueba')
+# def prueba1():
+#     p1 = request.args.get('id','No contiene este parametro')
+#     p2 = request.args.get('fecha', 'No contiene este parametro')
+#     p3 = request.args.get('ciudad', 'No contiene este parametro')
+#     p4 = request.args.get('entidad', 'No contiene este parametro')
+#     print(p1,p2,p3,p4)
+#     return iniciar2(p1,p2,p3,p4)   
 
-@app.route('/proceso-dos')
+@app.route('/proceso')
 def prueba():
     p1 = request.args.get('id','No contiene este parametro')
     p2 = request.args.get('ciudad', 'No contiene este parametro')
     p3 = request.args.get('entidad', 'No contiene este parametro')
     print(p1,p2,p3)
-    return iniciar(p1,p2,p3)
-
-
-@app.route('/proceso/<string:id>/<string:fecha>/<string:ciudad>/<string:entidad_especialidad>')
-def getProduct(id,fecha,ciudad,entidad_especialidad):
-    #print(id," ",fecha," ",ciudad," ",entidad_especialidad)
-    return iniciar2(id,fecha,ciudad,entidad_especialidad)
+    try:
+        return iniciar(p1,p2,p3)
+    except:
+        return 'Error de carga'
 
 if __name__=='__main__':
     app.run(host='0.0.0.0', port=80)
     # app.run(host='127.0.0.1')
+
 
