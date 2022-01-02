@@ -63,8 +63,8 @@ def iniciar(id,ciudad,entidad_especialidad):
     capabilities = {
         "browserName": "firefox",
         "version": "92.0",
-        "enableVNC": True,
-        "enableVideo": False
+        #"enableVNC": True,
+        #"enableVideo": False
     }
 
     driver = webdriver.Remote(
