@@ -44,14 +44,15 @@ def Generar_Json(separado):
 
     return json.dumps(value,ensure_ascii= False)
 
-
-def Seleccionar_ciudad(driver,ciudad):
+def Seleccionar_C_E(driver,nombre,id):
     try:
-       # Selección de la ciudad
-        aux = driver.find_element_by_id('ddlCiudad')
+        aux = driver.find_element_by_id(id)
         aux.click()
         select = Select(aux)
-        select.select_by_visible_text(ciudad)
+        try:
+            select.select_by_visible_text(nombre)
+        except:
+            return 'Error'
         # Value según la ciudad
         #driver.find_element_by_xpath('//table[@class="contenedor"]//select[@class="campos"]//option[@value='+value+']').click()
 
@@ -59,19 +60,7 @@ def Seleccionar_ciudad(driver,ciudad):
         #print('Mucha en los campos de seleccionar la ciudad y entidad/Especialidad')
         return False
     return True
-
-def Seleccionar_Entidad_Especialidad(driver,entidad_especialidad):
-    try:
-        aux = driver.find_element_by_id('ddlEntidadEspecialidad')
-        aux.click()
-        select = Select(aux)
-        select.select_by_visible_text(entidad_especialidad)
-
-    except TimeoutException:
-        #print('Mucha demora en cargar')
-        return False
-    return True
-
+    
 def Diligenciar_y_Consultar(id,driver):
     aux = driver.find_element_by_xpath('//div[@id="divNumRadicacion"]')
     aux.find_element_by_xpath('//input[@onkeypress=" return num(event)"]').send_keys(id)
@@ -81,6 +70,16 @@ def Diligenciar_y_Consultar(id,driver):
     aux.find_element_by_xpath('//input[@value="Consultar"]').click()
     return True
 
+def Cerrar(driver):
+    try:
+        driver.quit()
+    except:
+        print("Ya se cerró")
+
+def SeleccionarList(driver,metodo):
+    if metodo == "Error":
+        Cerrar(driver)
+    return metodo
 
 def iniciar(id,ciudad,entidad_especialidad):
     Json = "Error de carga"
@@ -96,27 +95,30 @@ def iniciar(id,ciudad,entidad_especialidad):
         command_executor='http://34.102.0.97:4444/wd/hub',
         desired_capabilities=capabilities
     )
+    
     driver.get(url)
     _b_ciudad = True
+
     while _b_ciudad:
         try:
-            if Seleccionar_ciudad(driver, ciudad):
-                #print("Ciudad seleccionada")
-                _b_ciudad = False
+            respuesta = SeleccionarList(driver,Seleccionar_C_E(driver,ciudad,'ddlCiudad'))
+            if respuesta == "Error":
+                return json.dumps("ERROR",ensure_ascii= False)
+            else:
+                _b_ciudad = not respuesta
         except:
             _b_ciudad=True
-            #print("Se demoró cargar la ciudad")
-
 
     _b_entidad = True
     while _b_entidad:
         try:
-            if Seleccionar_Entidad_Especialidad(driver,entidad_especialidad):
-                #print("Entidad/Especialidad seleccionada")
-                _b_entidad = False
+            respuesta = SeleccionarList(driver,Seleccionar_C_E(driver,entidad_especialidad,'ddlEntidadEspecialidad'))
+            if respuesta == "Error":
+                return json.dumps("ERROR",ensure_ascii= False)
+            else:
+                _b_entidad = not respuesta
         except:
             _b_entidad=True
-            #print("Se demoró cargar la entidad")
 
     _b_envio = True
 
