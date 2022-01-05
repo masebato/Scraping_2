@@ -13,16 +13,10 @@ def Generar_Json(separado):
     fecha_finaliza_termino =separado[4]
     fecha_registro = separado[5]
 
-    value = [
-        {"fecha_actuacion": fecha_actuacion},
-        {"actuacion": actuacion},
-        {"anotacion": anotacion},
-        {"fecha_inicia_termino": fecha_inicia_termino},
-        {"fecha_finaliza_termino": fecha_finaliza_termino},
-        {"fecha_registro": fecha_registro}
-    ]
+    value = {'fecha_actuacion': fecha_actuacion,'actuacion': actuacion,'anotacion': anotacion},'fecha_inicia_termino': fecha_inicia_termino,'fecha_finaliza_termino': fecha_finaliza_termino,'fecha_registro': fecha_registro}
+    
 
-    return json.dumps(value,ensure_ascii= False)
+    return value
 
 def Seleccionar_C_E(driver,nombre,id):
     try:
