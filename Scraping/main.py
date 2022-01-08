@@ -13,22 +13,39 @@ def Generar_Json(separado):
     fecha_finaliza_termino =separado[4]
     fecha_registro = separado[5]
 
-    value = {'fecha_actuacion': fecha_actuacion,'actuacion': actuacion,'anotacion': anotacion},'fecha_inicia_termino': fecha_inicia_termino,'fecha_finaliza_termino': fecha_finaliza_termino,'fecha_registro': fecha_registro}
+    value = {'fecha_actuacion': fecha_actuacion,'actuacion': actuacion,'anotacion': anotacion,'fecha_inicia_termino': fecha_inicia_termino,'fecha_finaliza_termino': fecha_finaliza_termino,'fecha_registro': fecha_registro}
     
 
     return value
 
-def Seleccionar_C_E(driver,nombre,id):
+def Seleccionar_C_E(driver,id,value_ref):
     try:
         aux = driver.find_element_by_id(id)
         # aux =driver.find_element(By.ID,id)
         aux.click()
         select = Select(aux)
         try:
-            select.select_by_visible_text(nombre)
+            select.select_by_value(value_ref)
         except:
             return 'Error'
 
+    except TimeoutException:
+        return False
+    return True
+
+def Seleccionar_C_E_2(driver,id,value_ref):
+    try:    
+        aux = driver.find_element_by_id(id)
+        # aux =driver.find_element(By.ID,id)
+        aux.click()
+
+        driver.find_element_by_css_selector(
+                'option[value*="'+value_ref+'"]'
+            ).click()
+
+        if len(driver.find_element_by_id("msjError").text)>0:
+            return "Inactive"
+       
     except TimeoutException:
         return False
     return True
@@ -56,7 +73,7 @@ def SeleccionarList(driver,metodo):
         Cerrar(driver)
     return metodo
 
-def iniciar(id,ciudad,entidad_especialidad):
+def iniciar(id):
     Json = {
         "Error": 'Carga',
     }
@@ -64,8 +81,8 @@ def iniciar(id,ciudad,entidad_especialidad):
     capabilities = {
         "browserName": "firefox",
         "version": "92.0",
-        #"enableVNC": True,
-        #"enableVideo": False
+        "enableVNC": True,
+        "enableVideo": False
     }
 
     driver = webdriver.Remote(
@@ -74,11 +91,12 @@ def iniciar(id,ciudad,entidad_especialidad):
     )
     
     driver.get(url)
+    
     _b_ciudad = True
     contador = 0
     while _b_ciudad:
         try:
-            respuesta = SeleccionarList(driver,Seleccionar_C_E(driver,ciudad,'ddlCiudad'))
+            respuesta = SeleccionarList(driver,Seleccionar_C_E(driver,'ddlCiudad',id[0:5]))
             if respuesta == "Error":
                 return json.dumps(Json,ensure_ascii= False)
             else:
@@ -96,8 +114,14 @@ def iniciar(id,ciudad,entidad_especialidad):
     contador = 0
     while _b_entidad:
         try:
-            respuesta = SeleccionarList(driver,Seleccionar_C_E(driver,entidad_especialidad,'ddlEntidadEspecialidad'))
+            respuesta = SeleccionarList(driver,Seleccionar_C_E_2(driver,'ddlEntidadEspecialidad',id[5:9]+'-'+id[0:5]))
             if respuesta == "Error":
+                return json.dumps(Json,ensure_ascii= False)
+            elif respuesta == "Inactive":
+                Json = {
+                    "Error": 'Inactive',
+                }
+                Cerrar(driver)
                 return json.dumps(Json,ensure_ascii= False)
             else:
                 _b_entidad = not respuesta
