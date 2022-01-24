@@ -9,11 +9,6 @@ from selenium.webdriver.support.ui import Select
 import time
 
 def Generar_Json(separado):
-    # print('******************')
-    # for i in separado:
-    #     print(i)
-    # print(len(separado))
-    # print('******************')
     fecha_actuacion = separado[0]
     actuacion = separado[1]
     anotacion = separado[2]
@@ -23,7 +18,6 @@ def Generar_Json(separado):
 
     value = {'fecha_actuacion': fecha_actuacion,'actuacion': actuacion,'anotacion': anotacion,'fecha_inicia_termino': fecha_inicia_termino,'fecha_finaliza_termino': fecha_finaliza_termino,'fecha_registro': fecha_registro}
     
-
     return value
 
 def Seleccionar_C_E(driver,id,value_ref):
@@ -73,6 +67,7 @@ def Diligenciar_y_Consultar(id,driver):
 
 def Cerrar(driver):
     try:
+        driver.close()
         driver.quit()
     except:
         print("Ya se cerró")
@@ -88,27 +83,29 @@ def iniciar(id):
     }
     url = 'https://procesos.ramajudicial.gov.co/procesoscs/ConsultaJusticias21.aspx?EntryId=YtExgTScBbCqSdjRAx0PEayOJM8%3d'
     capabilities = {
-        "browserName": "firefox",
-        "version": "94.0",
+        "browserName": "MicrosoftEdge",
+        "version": "95.0",
         #"enableVNC": True,
         #"enableVideo": False
     }
 
-    driver = webdriver.Remote(
-        command_executor='http://45.90.108.38:4444/wd/hub',
-        desired_capabilities=capabilities
-    )
+    # driver = webdriver.Remote(
+    #     command_executor='http://45.90.108.38:4444/wd/hub',
+    #     desired_capabilities=capabilities
+    # )
 
-    # chrome_options = webdriver.FirefoxOptions()
-    # chrome_options.add_argument('--incognito')
-    # driver = webdriver.Firefox(executable_path='geckodriver.exe', options=chrome_options)
-    #chrome_options.add_argument('--headless')
-    
+    chrome_options = webdriver.FirefoxOptions()
+    chrome_options.add_argument('--incognito')
+    driver = webdriver.Firefox(executable_path='geckodriver.exe', options=chrome_options)
+    # chrome_options.add_argument('--headless')
+    # print("URL Inicio")
+        
     driver.get(url)
+    # print("URL Fin")
     
     _b_ciudad = True
     contador = 0
-    print("Ciudad Inicio")
+    # print("Ciudad Inicio")
     while _b_ciudad:
         try:
             respuesta = SeleccionarList(driver,Seleccionar_C_E(driver,'ddlCiudad',id[0:5]))
@@ -126,14 +123,15 @@ def iniciar(id):
         except:
             _b_ciudad=True
 
-    print("Ciudad Fin")
+    # print("Ciudad Fin")
     _b_entidad = True
     contador = 0
-    print("Entidad Inicio")
+    # print("Entidad Inicio")
     while _b_entidad:
         try:
             respuesta = SeleccionarList(driver,Seleccionar_C_E_2(driver,'ddlEntidadEspecialidad',id[5:9]+'-'+id[0:5]))
             if respuesta == "Error":
+                Cerrar(driver)
                 return json.dumps(Json,ensure_ascii= False)
             elif respuesta == "Inactive":
                 Json = {
@@ -150,14 +148,14 @@ def iniciar(id):
         except:
             _b_entidad=True
 
-    print("Entidad Fin")
+    # print("Entidad Fin")
     _b_envio = True
 
-    print("Diligencia Inicio")
+    # print("Diligencia Inicio")
     while _b_envio:
         try:
             salida = Diligenciar_y_Consultar(id, driver)
-            print("SALIDA: ",salida)
+            # print("SALIDA: ",salida)
             if salida==True:
                 _b_envio=False  
             else:
@@ -175,15 +173,14 @@ def iniciar(id):
             }     
             return json.dumps(Json,ensure_ascii= False)
 
-    print("Diligencia Fin")
+    # print("Diligencia Fin")
     _b_contenido = True
 
-    print("Contenido Inicio")
+    # print("Contenido Inicio")
     contador = 0
     while _b_contenido:
         try:
             time.sleep(1)
-
             if driver.find_element_by_id("msjError").text=="La búsqueda NO muestra resultados":
                 Json = {
                 "Error": 'Cero Registro',
@@ -203,16 +200,16 @@ def iniciar(id):
             _Scontenido[0] = driver.find_element_by_xpath("//div[@class='div_td_Actuacion_fila1']").text
             for i in range(5):
                  _Scontenido[i+1]=(_contenido[i].text)                            
-            Json = Generar_Json(_Scontenido)
-            
-            
+            Json = Generar_Json(_Scontenido)                    
             _b_contenido = False
+            Cerrar(driver)
 
         except:
             _b_contenido = True
 
-    print("Contenido Fin")
+    # print("Contenido Fin")
     try:
+        driver.close()
         driver.quit()
     except:
         print("Ya se cerró")
