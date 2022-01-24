@@ -89,14 +89,14 @@ def iniciar(id):
         #"enableVideo": False
     }
 
-    # driver = webdriver.Remote(
-    #     command_executor='http://45.90.108.38:4444/wd/hub',
-    #     desired_capabilities=capabilities
-    # )
+    driver = webdriver.Remote(
+        command_executor='http://45.90.108.38:4444/wd/hub',
+        desired_capabilities=capabilities
+    )
 
-    chrome_options = webdriver.FirefoxOptions()
-    chrome_options.add_argument('--incognito')
-    driver = webdriver.Firefox(executable_path='geckodriver.exe', options=chrome_options)
+    # chrome_options = webdriver.FirefoxOptions()
+    # chrome_options.add_argument('--incognito')
+    # driver = webdriver.Firefox(executable_path='geckodriver.exe', options=chrome_options)
     # chrome_options.add_argument('--headless')
     # print("URL Inicio")
         
