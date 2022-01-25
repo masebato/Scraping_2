@@ -111,14 +111,14 @@ def iniciar(id):
             respuesta = SeleccionarList(driver,Seleccionar_C_E(driver,'ddlCiudad',id[0:5]))
             if respuesta == "Error":
                 Cerrar(driver)
-                return json.dumps(Json,ensure_ascii= False)
+                return json.dumps(Json)
             else:
                 _b_ciudad = not respuesta
 
             contador = contador + 1
             if contador == 30:
                 Cerrar(driver)
-                return json.dumps(Json,ensure_ascii= False)
+                return json.dumps(Json)
 
         except:
             _b_ciudad=True
@@ -132,19 +132,19 @@ def iniciar(id):
             respuesta = SeleccionarList(driver,Seleccionar_C_E_2(driver,'ddlEntidadEspecialidad',id[5:9]+'-'+id[0:5]))
             if respuesta == "Error":
                 Cerrar(driver)
-                return json.dumps(Json,ensure_ascii= False)
+                return json.dumps(Json)
             elif respuesta == "Inactive":
                 Json = {
                     "Error": 'Inactive',
                 }
                 Cerrar(driver)
-                return json.dumps(Json,ensure_ascii= False)
+                return json.dumps(Json)
             else:
                 _b_entidad = not respuesta
             contador = contador + 1
             if contador == 30:
                 Cerrar(driver)
-                return json.dumps(Json,ensure_ascii= False)
+                return json.dumps(Json)
         except:
             _b_entidad=True
 
@@ -163,7 +163,7 @@ def iniciar(id):
                 "Error": 'Cero Registro',
                 } 
                 Cerrar(driver)
-                return json.dumps(Json,ensure_ascii= False)
+                return json.dumps(Json)
 
         except:
             _b_envio = True       
@@ -171,7 +171,7 @@ def iniciar(id):
             Json = {
                 "Error": 'Diligencia',
             }     
-            return json.dumps(Json,ensure_ascii= False)
+            return json.dumps(Json)
 
     # print("Diligencia Fin")
     _b_contenido = True
@@ -185,7 +185,7 @@ def iniciar(id):
                 "Error": 'Cero Registro',
                 } 
                 Cerrar(driver)
-                return json.dumps(Json,ensure_ascii= False)
+                return json.dumps(Json)
                 
             _contenido = driver.find_elements_by_xpath("//div[@class='div_td_Actuacion']")
             _Scontenido = [1,2,3,4,5,6]
@@ -228,4 +228,4 @@ def Prueba_Return():
         desired_capabilities=capabilities
     )
     Cerrar(driver)
-    return json.dumps(Json,ensure_ascii= False)
+    return json.dumps(Json)
