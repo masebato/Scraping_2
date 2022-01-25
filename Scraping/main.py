@@ -177,20 +177,12 @@ def iniciar(id):
     _b_contenido = True
 
     # print("Contenido Inicio")
-    contador = 0
     while _b_contenido:
         try:
             time.sleep(1)
             if driver.find_element_by_id("msjError").text=="La búsqueda NO muestra resultados":
                 Json = {
                 "Error": 'Cero Registro',
-                } 
-                Cerrar(driver)
-                return json.dumps(Json,ensure_ascii= False)
-            contador = contador + 1
-            if(contador==5):
-                Json = {
-                "Error": 'Carga Contador',
                 } 
                 Cerrar(driver)
                 return json.dumps(Json,ensure_ascii= False)
