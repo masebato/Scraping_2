@@ -79,7 +79,7 @@ def SeleccionarList(driver,metodo):
 
 def iniciar(id):
     Json = {
-        "Error": 'Carga',
+        "Error": 'Carga Inicio',
     }
     url = 'https://procesos.ramajudicial.gov.co/procesoscs/ConsultaJusticias21.aspx?EntryId=YtExgTScBbCqSdjRAx0PEayOJM8%3d'
     capabilities = {
@@ -190,7 +190,7 @@ def iniciar(id):
             contador = contador + 1
             if(contador==5):
                 Json = {
-                "Error": 'Carga',
+                "Error": 'Carga Contador',
                 } 
                 Cerrar(driver)
                 return json.dumps(Json,ensure_ascii= False)
@@ -215,3 +215,25 @@ def iniciar(id):
         print("Ya se cerró")
 
     return Json
+
+
+def Prueba_Return():
+    Json = {
+        "Error": 'Carga Contador',
+    }
+
+    url = 'https://procesos.ramajudicial.gov.co/procesoscs/ConsultaJusticias21.aspx?EntryId=YtExgTScBbCqSdjRAx0PEayOJM8%3d'
+    
+    capabilities = {
+        "browserName": "MicrosoftEdge",
+        "version": "95.0",
+        #"enableVNC": True,
+        #"enableVideo": False
+    }
+
+    driver = webdriver.Remote(
+        command_executor='http://45.90.108.38:4444/wd/hub',
+        desired_capabilities=capabilities
+    )
+    Cerrar(driver)
+    return json.dumps(Json,ensure_ascii= False)

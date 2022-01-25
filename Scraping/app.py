@@ -30,13 +30,17 @@ def d():
 #     print(p1,p2,p3,p4)
 #     return iniciar2(p1,p2,p3,p4)   
 
+@app.route('/preuba')
+def p():
+    return Prueba_Return()
+
 @app.route('/proceso')
 def prueba():
     p1 = request.args.get('id','No contiene este parametro')
     print(p1)
     # Create Dictionary
     value = {
-        "Error": 'Carga',
+        "Error": 'Carga APP',
     }
     try:
         return  jsonify(iniciar(p1))
@@ -44,7 +48,7 @@ def prueba():
         return json.dumps(value)
 
 if __name__=='__main__':
-    app.run(host='0.0.0.0', port=9090)
-    # app.run(host='127.0.0.1')
+    # app.run(host='0.0.0.0', port=9090,debug=True, threaded=True)
+    app.run(host='127.0.0.1')
 
 
