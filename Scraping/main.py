@@ -67,7 +67,6 @@ def Diligenciar_y_Consultar(id,driver):
 
 def Cerrar(driver):
     try:
-        driver.close()
         driver.quit()
     except:
         print("Ya se cerró")
@@ -201,7 +200,6 @@ def iniciar(id):
 
     # print("Contenido Fin")
     try:
-        driver.close()
         driver.quit()
     except:
         print("Ya se cerró")
