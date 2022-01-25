@@ -44,7 +44,7 @@ def prueba():
     }
     try:
         return  jsonify(iniciar(p1))
-    except ProcessLookupError as ex:
+    except RuntimeError as ex:
         print(ex)
         return json.dumps(value)
 
